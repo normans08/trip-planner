@@ -5,6 +5,7 @@ import Rating from "@mui/material/Rating";
 import ItineraryListing from "../../components/itineraryListing";
 import InitialLoader from "../../components/dialog/InitialLoader";
 import { useParams } from "react-router-dom";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicHJhdmVlbi0wOCIsImEiOiJjbDJxMTAxZG8yazZuM2dvN3R0MW9tdnRoIn0.8zkOk6-ff0A6lA5XScrx2g";
