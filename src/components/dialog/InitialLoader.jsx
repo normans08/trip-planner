@@ -19,11 +19,12 @@ const InitialLoader = ({ open }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         sx={{
-          "& .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop": {
-            backdropFilter: "blur(5px) !important",
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(5px)",
             backgroundColor: "#ffffff94 !important",
           },
-          "& .css-m9glnp-MuiPaper-root-MuiDialog-paper": {
+
+          "& .MuiDialog-paper": {
             backgroundColor: "transparent !important",
           },
         }}
