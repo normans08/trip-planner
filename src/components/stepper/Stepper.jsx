@@ -118,7 +118,7 @@ const Stepper = () => {
         setLoader(false);
       }
     } else {
-      setError(true);
+      setError(false);
     }
   };
 

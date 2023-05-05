@@ -13,8 +13,8 @@ mapboxgl.accessToken =
 const View = () => {
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lng, setLng] = useState(77.1734);
-  const [lat, setLat] = useState(31.1048);
+  const [lng, setLng] = useState();
+  const [lat, setLat] = useState();
   const [zoom, setZoom] = useState(2);
   const [userInfo, setUserInfo] = useState(null);
   const [value, setValue] = React.useState(0);
@@ -23,12 +23,12 @@ const View = () => {
   const params = useParams();
 
   let { id } = params;
-  let selectedTrip = userInfo?.find((item) => item.id == id);
+  let selectedTrip = userInfo?.find((item) => item?.id == id);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoader(false);
-    }, 900);
+    }, 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -36,10 +36,12 @@ const View = () => {
     if (typeof window !== "undefined") {
       let newArr = window.localStorage.getItem("trip-plain");
       let parsed = JSON.parse(newArr);
-      setGptRes(parsed[0]?.chatgpt);
-      setUserInfo(parsed);
-      setLat(parsed[0]?.lat);
-      setLng(parsed[0]?.long);
+      if (parsed) {
+        setGptRes(parsed[0]?.chatgpt);
+        setUserInfo(parsed);
+        setLat(parsed[0]?.lat);
+        setLng(parsed[0]?.long);
+      }
     }
   }, []);
   const popUp = new mapboxgl.Popup({
@@ -65,23 +67,25 @@ const View = () => {
   );
 
   useEffect(() => {
-    if (map.current) return; // initialize map only once
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v12",
-      center: [lng, lat],
-      zoom: zoom,
-    });
-    new mapboxgl.Marker({ color: "#eb9029", scale: 1.5 })
-      .setLngLat([lng, lat])
-      .setPopup(popUp)
-      .addTo(map.current);
-    // new mapboxgl.Marker({ color: "#e8eb29", scale: 1.5 })
-    //   .setLngLat([77.1734, 31.1048])
-    //   .setPopup(popUp2)
-    //   .addTo(map.current);
+    if (lat) {
+      if (map.current) return; // initialize map only once
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: "mapbox://styles/mapbox/streets-v12",
+        center: [lng, lat],
+        zoom: zoom,
+      });
+      new mapboxgl.Marker({ color: "#eb9029", scale: 1.5 })
+        .setLngLat([lng, lat])
+        .setPopup(popUp)
+        .addTo(map.current);
+      // new mapboxgl.Marker({ color: "#e8eb29", scale: 1.5 })
+      //   .setLngLat([77.1734, 31.1048])
+      //   .setPopup(popUp2)
+      //   .addTo(map.current);
 
-    map.current.zoomTo(10, { duration: 10000 });
+      map.current.zoomTo(10, { duration: 15000 });
+    }
   });
 
   useEffect(() => {
@@ -92,7 +96,7 @@ const View = () => {
         setLat(map.current.getCenter().lat.toFixed(4));
         setZoom(map.current.getZoom().toFixed(2));
       });
-    }, 2000);
+    }, 3000);
     return () => clearTimeout(timer);
   });
 
