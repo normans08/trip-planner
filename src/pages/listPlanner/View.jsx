@@ -37,10 +37,11 @@ const View = () => {
       let newArr = window.localStorage.getItem("trip-plain");
       let parsed = JSON.parse(newArr);
       if (parsed) {
-        setGptRes(parsed[0]?.chatgpt);
+        let selectedTrip = parsed?.find((item) => item?.id == id);
+        setGptRes(selectedTrip?.chatgpt);
         setUserInfo(parsed);
-        setLat(parsed[0]?.lat);
-        setLng(parsed[0]?.long);
+        setLat(selectedTrip?.lat);
+        setLng(selectedTrip?.long);
       }
     }
   }, []);
