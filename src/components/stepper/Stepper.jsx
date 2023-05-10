@@ -31,7 +31,8 @@ const Stepper = () => {
   useEffect(() => {
     let newArr = window.localStorage.getItem("trip-plain");
     let parsed = JSON.parse(newArr);
-    setUserTodos(parsed);
+    let isLocationsList = parsed ? parsed : [];
+    setUserTodos(isLocationsList);
   }, []);
 
   const handleInputChange = (event) => {
@@ -98,18 +99,15 @@ const Stepper = () => {
             data: parmas,
           }
         );
-
         if (
           gptResponse.status === 200 ||
           (gptResponse.status === 201 && gptResponse.data)
         ) {
           let parsedObj = gptResponse.data?.data;
           state.chatgpt = parsedObj;
-
-          setLoader(false);
           userTodos.push(state);
           window.localStorage.setItem("trip-plain", JSON.stringify(userTodos));
-          // handleNext();
+          setLoader(false);
           router("/listPlanner");
         } else {
           setLoader(false);
