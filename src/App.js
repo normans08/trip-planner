@@ -1,5 +1,5 @@
-import logo from "./logo.svg";
 import "./App.css";
+import { ToastContainer, toast } from "react-toastify";
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import TripPlanner from "./pages/trip-planner/TripPlanner";
@@ -12,11 +12,14 @@ function App() {
     }
   }, []);
   return (
-    <Routes>
-      <Route exact path="/" element={<TripPlanner />}></Route>
-      <Route exact path="/listPlanner" element={<ListPlanner />}></Route>
-      <Route exact path="/listPlanner/:id" element={<View />}></Route>
-    </Routes>
+    <>
+      <Routes>
+        <Route exact path="/" element={<TripPlanner />}></Route>
+        <Route exact path="/listPlanner" element={<ListPlanner />}></Route>
+        <Route exact path="/listPlanner/:id" element={<View />}></Route>
+      </Routes>
+      <ToastContainer />
+    </>
   );
 }
 

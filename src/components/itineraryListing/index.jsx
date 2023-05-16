@@ -31,7 +31,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const Index = ({ gptRes, tableLoader }) => {
-  const [gptResponse, setGptResponse] = useState("");
+  const [gptResponse, setGptResponse] = useState([]);
 
   useEffect(() => {
     if (gptRes) {
@@ -39,6 +39,7 @@ const Index = ({ gptRes, tableLoader }) => {
       setGptResponse(res);
     }
   }, [gptRes]);
+
   return (
     <>
       <TableContainer
@@ -64,34 +65,67 @@ const Index = ({ gptRes, tableLoader }) => {
             {Object.entries(gptResponse).map(([key, value]) => {
               return (
                 <>
-                  <TableRow key={key}>
-                    <TableCell rowSpan={value.length + 1}>{key}</TableCell>
-                  </TableRow>
-                  {value.map((detail, index) => (
-                    <StyledTableRow key={index}>
-                      <StyledTableCell>{detail["Exact Time"]}</StyledTableCell>
-                      <StyledTableCell>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            p: 0.7,
-                            borderRadius: "4px",
-                            color: "#49abb8b5",
-                            textAlign: "center",
-                            // backgroundColor: "#ff000029",
-                          }}
-                        >
-                          {detail?.Activity}
-                        </Typography>
-                      </StyledTableCell>
-                      <StyledTableCell>
-                        {detail?.Recommendations}
-                      </StyledTableCell>
-                      <StyledTableCell>{detail?.Latitude}</StyledTableCell>
-                      <StyledTableCell>{detail?.Longitude}</StyledTableCell>
-                      <StyledTableCell>{detail?.Price} $</StyledTableCell>
-                    </StyledTableRow>
-                  ))}
+                  {Array.isArray(value) ? (
+                    <>
+                      <TableRow key={key}>
+                        <TableCell rowSpan={value.length + 1}>{key}</TableCell>
+                      </TableRow>
+                      {value.map((detail, index) => (
+                        <StyledTableRow key={index}>
+                          <StyledTableCell>
+                            {detail["Exact Time"]}
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                p: 0.7,
+                                borderRadius: "4px",
+                                color: "#49abb8b5",
+                                textAlign: "center",
+                                // backgroundColor: "#ff000029",
+                              }}
+                            >
+                              {detail?.Activity}
+                            </Typography>
+                          </StyledTableCell>
+                          <StyledTableCell>
+                            {detail?.Recommendations}
+                          </StyledTableCell>
+                          <StyledTableCell>{detail?.Latitude}</StyledTableCell>
+                          <StyledTableCell>{detail?.Longitude}</StyledTableCell>
+                          <StyledTableCell>{detail?.Price} $</StyledTableCell>
+                        </StyledTableRow>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      <StyledTableRow>
+                        <StyledTableCell>{key}</StyledTableCell>
+                        <StyledTableCell>{value["Exact Time"]}</StyledTableCell>
+                        <StyledTableCell>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              p: 0.7,
+                              borderRadius: "4px",
+                              color: "#49abb8b5",
+                              textAlign: "center",
+                              // backgroundColor: "#ff000029",
+                            }}
+                          >
+                            {value?.Activity}
+                          </Typography>
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          {value?.Recommendations}
+                        </StyledTableCell>
+                        <StyledTableCell>{value?.Latitude}</StyledTableCell>
+                        <StyledTableCell>{value?.Longitude}</StyledTableCell>
+                        <StyledTableCell>{value?.Price} $</StyledTableCell>
+                      </StyledTableRow>
+                    </>
+                  )}
                 </>
               );
             })}

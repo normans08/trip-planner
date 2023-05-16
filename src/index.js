@@ -5,7 +5,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "mapbox-gl/dist/mapbox-gl.css";
-
+import "react-toastify/dist/ReactToastify.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>

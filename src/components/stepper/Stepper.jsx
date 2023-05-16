@@ -4,6 +4,8 @@ import Step2 from "../steps/Step2";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 const Stepper = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
@@ -12,10 +14,8 @@ const Stepper = () => {
   const [lat, setLat] = React.useState(0);
   const [loader, setLoader] = React.useState(false);
   const [showError, setError] = React.useState(false);
-  const [LocationInfo, setLocationInfo] = React.useState([]);
   let API_KEY =
     "pk.eyJ1IjoicHJhdmVlbi0wOCIsImEiOiJjbDJxMTAxZG8yazZuM2dvN3R0MW9tdnRoIn0.8zkOk6-ff0A6lA5XScrx2g";
-  const date = new Date();
   const router = useNavigate();
   const [state, setState] = React.useState({
     name: "",
@@ -37,18 +37,26 @@ const Stepper = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setState((prevProps) => ({
-      ...prevProps,
-      [name]: value,
-      id: uuidv4(),
-      date: date.toLocaleDateString(),
-    }));
+    if (name === "days" && value >= 1 && value <= 10) {
+      setState((prevState) => ({
+        ...prevState,
+        [name]: value,
+        id: uuidv4(),
+        date: prevState.date || new Date().toLocaleDateString(),
+      }));
+    } else if (name !== "days") {
+      setState((prevState) => ({
+        ...prevState,
+        [name]: value,
+        id: uuidv4(),
+        date: prevState.date || new Date().toLocaleDateString(),
+      }));
+    }
   };
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
-
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -68,7 +76,6 @@ const Stepper = () => {
     event.preventDefault();
     if (state?.destination?.label && state.budget && state.name && state.days) {
       setLoader(true);
-      setError(false);
       const response = await axios
         .get(
           `https://api.mapbox.com/geocoding/v5/mapbox.places/${state?.destination?.label}.json?access_token=${API_KEY}`
@@ -82,11 +89,25 @@ const Stepper = () => {
 
           return res;
         });
+      getTtinerary(response);
+    } else {
+      setError(false);
+      toast.error("Please ensure that all fields are properly filled!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
 
-      setLat(response.data.features[0].geometry.coordinates[1]);
-
-      setLng(response.data.features[0].geometry.coordinates[0]);
-      if (response.data.features[0].geometry.coordinates[0]) {
+  const getTtinerary = async (response) => {
+    try {
+      if (response?.data?.features[0]?.geometry?.coordinates[0]) {
         let parmas = {
           budget: state.budget,
           places: state?.destination?.label,
@@ -104,22 +125,81 @@ const Stepper = () => {
           (gptResponse.status === 201 && gptResponse.data)
         ) {
           let parsedObj = gptResponse.data?.data;
-          state.chatgpt = parsedObj;
-          userTodos.push(state);
-          window.localStorage.setItem("trip-plain", JSON.stringify(userTodos));
-          setLoader(false);
-          router("/listPlanner");
+          let isArray = gptResponse.data?.data?.content.search("I'm sorry");
+          if (isArray === -1) {
+            state.chatgpt = parsedObj;
+            userTodos.push(state);
+            window.localStorage.setItem(
+              "trip-plain",
+              JSON.stringify(userTodos)
+            );
+            setLoader(false);
+            router("/listPlanner");
+            toast.success("Your trip has been successfully created !", {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          } else {
+            setLoader(false);
+            toast.error(
+              gptResponse.data?.data?.content
+                ? gptResponse.data?.data?.content
+                : "Something seems fishy; please provide the necessary details for our AI !",
+              {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              }
+            );
+          }
         } else {
           setLoader(false);
+          toast.error(
+            "Something seems fishy; please provide the necessary details for our AI !",
+            {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            }
+          );
         }
       } else if (!state?.destination?.label) {
         setLoader(false);
       }
-    } else {
-      setError(false);
+    } catch (err) {
+      console.log("error", err);
+      setLoader(false);
+      toast.error(
+        "Something seems fishy; please provide the necessary details for our AI !",
+        {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
     }
   };
-
   return (
     <div className="form-card">
       <form action="" className="form-info">

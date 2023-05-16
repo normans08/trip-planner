@@ -36,6 +36,7 @@ const Step2 = ({ state, handleInputChange, loader, showError }) => {
           <input
             type="text"
             name="name"
+            value={state.name}
             onChange={handleInputChange}
             className="form-control"
             placeholder="Name"
@@ -48,7 +49,7 @@ const Step2 = ({ state, handleInputChange, loader, showError }) => {
             apiKey="AIzaSyDA7UjuQmtnp2L2KuYA7lDLHToISahS4x4"
             selectProps={{
               placeholder: "Enter any place",
-              value,
+              value: value,
               onChange: (val) => handleChange(val),
               styles: {
                 input: (provided) => ({
@@ -76,9 +77,12 @@ const Step2 = ({ state, handleInputChange, loader, showError }) => {
           <input
             type="number"
             name="days"
+            max={10}
+            min={0}
+            value={state.days}
             onChange={handleInputChange}
             className="form-control"
-            placeholder="Number of days (max 5)"
+            placeholder="Number of days (max 10)"
           />
         </div>
       </div>
@@ -88,9 +92,10 @@ const Step2 = ({ state, handleInputChange, loader, showError }) => {
           <input
             name="budget"
             type="number"
+            value={state.budget}
             onChange={handleInputChange}
             className="form-control"
-            placeholder="Budget Per Day"
+            placeholder="Budget (only USD)"
           />
         </div>
       </div>
