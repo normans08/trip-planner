@@ -115,7 +115,7 @@ const Stepper = () => {
         };
 
         let gptResponse = await axios.post(
-          "https://hot-dumpling.com/trip-details",
+          "https://nverginia.magicroute.net/trip-details",
           {
             data: parmas,
           }

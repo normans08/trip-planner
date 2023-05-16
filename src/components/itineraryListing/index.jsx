@@ -50,15 +50,20 @@ const Index = ({ gptRes, tableLoader }) => {
         <Table stickyHeader size="small" aria-label="a dense table">
           <TableHead>
             <StyledTableRow>
-              <StyledTableCell width="70">Days</StyledTableCell>
+              <StyledTableCell width="90">Days</StyledTableCell>
               <StyledTableCell width="100" align="left">
                 Time
               </StyledTableCell>
-              <StyledTableCell align="left">Places</StyledTableCell>
-              <StyledTableCell align="left">Recommendations</StyledTableCell>
-              <StyledTableCell align="left">Lat</StyledTableCell>
-              <StyledTableCell align="left">Long</StyledTableCell>
-              <StyledTableCell align="left">Price</StyledTableCell>
+              <StyledTableCell width="300" align="left">
+                Places
+              </StyledTableCell>
+              <StyledTableCell width="500" align="left">
+                Recommendations
+              </StyledTableCell>
+
+              <StyledTableCell width="100" align="left">
+                Price
+              </StyledTableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody>
@@ -73,6 +78,7 @@ const Index = ({ gptRes, tableLoader }) => {
                       {value.map((detail, index) => (
                         <StyledTableRow key={index}>
                           <StyledTableCell>
+                            {" "}
                             {detail["Exact Time"]}
                           </StyledTableCell>
                           <StyledTableCell>
@@ -82,7 +88,7 @@ const Index = ({ gptRes, tableLoader }) => {
                                 p: 0.7,
                                 borderRadius: "4px",
                                 color: "#49abb8b5",
-                                textAlign: "center",
+                                textAlign: "left",
                                 // backgroundColor: "#ff000029",
                               }}
                             >
@@ -92,8 +98,7 @@ const Index = ({ gptRes, tableLoader }) => {
                           <StyledTableCell>
                             {detail?.Recommendations}
                           </StyledTableCell>
-                          <StyledTableCell>{detail?.Latitude}</StyledTableCell>
-                          <StyledTableCell>{detail?.Longitude}</StyledTableCell>
+
                           <StyledTableCell>{detail?.Price} $</StyledTableCell>
                         </StyledTableRow>
                       ))}
