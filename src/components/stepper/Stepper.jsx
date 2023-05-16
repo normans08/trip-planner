@@ -94,7 +94,7 @@ const Stepper = () => {
       setError(false);
       toast.error("Please ensure that all fields are properly filled!", {
         position: "bottom-right",
-        autoClose: 5000,
+        autoClose: false,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -137,7 +137,7 @@ const Stepper = () => {
             router("/listPlanner");
             toast.success("Your trip has been successfully created !", {
               position: "bottom-right",
-              autoClose: 5000,
+              autoClose: 1000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -153,7 +153,7 @@ const Stepper = () => {
                 : "Something seems fishy; please provide the necessary details for our AI !",
               {
                 position: "bottom-right",
-                autoClose: 5000,
+                autoClose: false,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -169,7 +169,7 @@ const Stepper = () => {
             "Something seems fishy; please provide the necessary details for our AI !",
             {
               position: "bottom-right",
-              autoClose: 5000,
+              autoClose: false,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -189,7 +189,7 @@ const Stepper = () => {
         "Something seems fishy; please provide the necessary details for our AI !",
         {
           position: "bottom-right",
-          autoClose: 5000,
+          autoClose: false,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

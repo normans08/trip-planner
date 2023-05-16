@@ -1,7 +1,7 @@
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Redirect } from "react-router-dom";
 import TripPlanner from "./pages/trip-planner/TripPlanner";
 import ListPlanner from "./pages/listPlanner/ListPlanner";
 import View from "./pages/listPlanner/View";
