@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+let jsonPattern = /\{[^]*\}/;
+
 const Stepper = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
@@ -124,9 +126,11 @@ const Stepper = () => {
           gptResponse.status === 200 ||
           (gptResponse.status === 201 && gptResponse.data)
         ) {
-          let parsedObj = gptResponse.data?.data;
-          let isArray = gptResponse.data?.data?.content.search("I'm sorry");
-          if (isArray === -1) {
+          let parsedObj = gptResponse.data?.response;
+          var match = parsedObj.match(jsonPattern);
+          console.log("gptResponse", match);
+
+          if (match) {
             state.chatgpt = parsedObj;
             userTodos.push(state);
             window.localStorage.setItem(
@@ -148,8 +152,8 @@ const Stepper = () => {
           } else {
             setLoader(false);
             toast.error(
-              gptResponse.data?.data?.content
-                ? gptResponse.data?.data?.content
+              gptResponse.data?.response
+                ? gptResponse.data?.response
                 : "Something seems fishy; please provide the necessary details for our AI !",
               {
                 position: "bottom-right",
