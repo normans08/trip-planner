@@ -128,16 +128,8 @@ const View = () => {
             {selectedTrip && selectedTrip?.destination?.label}
           </Typography>
           <Typography variant="body1" sx={{ color: "#a1a1a1", mt: 3 }}>
-            How would you rate this plan?
+            {`With a budget of  $${selectedTrip?.budget}, you can plan your trip for a specific number of days. Please refer to the table below to see the recommended duration for your trip. Let's create an itinerary that perfectly fits your budget and guarantees a memorable experience!`}
           </Typography>
-          <Rating
-            name="simple-controlled"
-            value={value}
-            sx={{ mt: 1 }}
-            onChange={(event, newValue) => {
-              setValue(newValue);
-            }}
-          />
         </Box>
 
         <Box sx={{ mt: 4 }}>
