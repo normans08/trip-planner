@@ -77,12 +77,12 @@ const Step2 = ({ state, handleInputChange, loader, showError }) => {
           <input
             type="number"
             name="days"
-            max={10}
-            min={0}
+            // max={10}
+            // min={0}
             value={state.days}
             onChange={handleInputChange}
             className="form-control"
-            placeholder="Number of days (max 10)"
+            placeholder="Number of days (max 30)"
           />
         </div>
       </div>

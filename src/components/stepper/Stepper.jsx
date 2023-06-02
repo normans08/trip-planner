@@ -39,7 +39,7 @@ const Stepper = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    if (name === "days" && value >= 1 && value <= 10) {
+    if (name === "days" && value >= 0 && value <= 30) {
       setState((prevState) => ({
         ...prevState,
         [name]: value,
@@ -106,6 +106,14 @@ const Stepper = () => {
       });
     }
   };
+  function isJson(str) {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   const getTtinerary = async (response) => {
     try {
@@ -117,7 +125,7 @@ const Stepper = () => {
         };
 
         let gptResponse = await axios.post(
-          "https://nverginia.magicroute.net/trip-details",
+          "http://localhost:8081/trip-details",
           {
             data: parmas,
           }
@@ -127,10 +135,20 @@ const Stepper = () => {
           (gptResponse.status === 201 && gptResponse.data)
         ) {
           let parsedObj = gptResponse.data?.response;
-          var match = parsedObj.match(jsonPattern);
-          console.log("gptResponse", match);
+          let match = parsedObj.match(jsonPattern);
+          let jsonObj = `${match ? match[0] : []}`
 
-          if (match) {
+          // console.log(JSON.parse(match[0]), 'json parse chakcdvdsj')
+          let cleanedJsonString
+          if (!jsonObj.endsWith("}")) {
+
+            cleanedJsonString = jsonObj?.replace(/[^{}[\]0-9a-zA-Z\s,:]/g, '');
+          } else {
+
+            cleanedJsonString = jsonObj
+          }
+
+          if (isJson(cleanedJsonString)) {
             state.chatgpt = parsedObj;
             userTodos.push(state);
             window.localStorage.setItem(
@@ -150,23 +168,85 @@ const Stepper = () => {
               theme: "dark",
             });
           } else {
-            setLoader(false);
-            toast.error(
-              gptResponse.data?.response
-                ? gptResponse.data?.response
-                : "Something seems fishy; please provide the necessary details for our AI !",
+            let gptResponse = await axios.post(
+              "http://localhost:8081/trip-details",
               {
-                position: "bottom-right",
-                autoClose: false,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
+                data: parmas,
               }
             );
+            if (
+              gptResponse.status === 200 ||
+              (gptResponse.status === 201 && gptResponse.data)
+            ) {
+              let parsedObj = gptResponse.data?.response;
+              let match = parsedObj.match(jsonPattern);
+              let jsonObj = `${match ? match[0] : []}`
+
+              let cleanedJsonString
+              if (!jsonObj.endsWith("}")) {
+
+                cleanedJsonString = jsonObj?.replace(/[^{}[\]0-9a-zA-Z\s,:]/g, '');
+              } else {
+
+                cleanedJsonString = jsonObj
+              }
+
+
+              if (isJson(cleanedJsonString)) {
+                state.chatgpt = parsedObj;
+                userTodos.push(state);
+                window.localStorage.setItem(
+                  "trip-plain",
+                  JSON.stringify(userTodos)
+                );
+                setLoader(false);
+                router("/listPlanner");
+                toast.success("Your trip has been successfully created !", {
+                  position: "bottom-right",
+                  autoClose: 1000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                });
+              } else {
+                setLoader(false);
+                toast.error(
+
+                  "That model is currently overloaded with other requests ! Please try after some time.",
+                  {
+                    position: "bottom-right",
+                    autoClose: false,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                  }
+                );
+              }
+            } else {
+              setLoader(false);
+              toast.error(
+                "Something seems fishy; please provide the necessary details for our AI !",
+                {
+                  position: "bottom-right",
+                  autoClose: false,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                }
+              );
+            }
           }
+
+
         } else {
           setLoader(false);
           toast.error(
