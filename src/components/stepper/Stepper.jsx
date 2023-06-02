@@ -125,7 +125,7 @@ const Stepper = () => {
         };
 
         let gptResponse = await axios.post(
-          "http://localhost:8081/trip-details",
+          "https://nverginia.magicroute.net/trip-details",
           {
             data: parmas,
           }
@@ -136,16 +136,14 @@ const Stepper = () => {
         ) {
           let parsedObj = gptResponse.data?.response;
           let match = parsedObj.match(jsonPattern);
-          let jsonObj = `${match ? match[0] : []}`
+          let jsonObj = `${match ? match[0] : []}`;
 
           // console.log(JSON.parse(match[0]), 'json parse chakcdvdsj')
-          let cleanedJsonString
+          let cleanedJsonString;
           if (!jsonObj.endsWith("}")) {
-
-            cleanedJsonString = jsonObj?.replace(/[^{}[\]0-9a-zA-Z\s,:]/g, '');
+            cleanedJsonString = jsonObj?.replace(/[^{}[\]0-9a-zA-Z\s,:]/g, "");
           } else {
-
-            cleanedJsonString = jsonObj
+            cleanedJsonString = jsonObj;
           }
 
           if (isJson(cleanedJsonString)) {
@@ -180,17 +178,17 @@ const Stepper = () => {
             ) {
               let parsedObj = gptResponse.data?.response;
               let match = parsedObj.match(jsonPattern);
-              let jsonObj = `${match ? match[0] : []}`
+              let jsonObj = `${match ? match[0] : []}`;
 
-              let cleanedJsonString
+              let cleanedJsonString;
               if (!jsonObj.endsWith("}")) {
-
-                cleanedJsonString = jsonObj?.replace(/[^{}[\]0-9a-zA-Z\s,:]/g, '');
+                cleanedJsonString = jsonObj?.replace(
+                  /[^{}[\]0-9a-zA-Z\s,:]/g,
+                  ""
+                );
               } else {
-
-                cleanedJsonString = jsonObj
+                cleanedJsonString = jsonObj;
               }
-
 
               if (isJson(cleanedJsonString)) {
                 state.chatgpt = parsedObj;
@@ -214,7 +212,6 @@ const Stepper = () => {
               } else {
                 setLoader(false);
                 toast.error(
-
                   "That model is currently overloaded with other requests ! Please try after some time.",
                   {
                     position: "bottom-right",
@@ -245,8 +242,6 @@ const Stepper = () => {
               );
             }
           }
-
-
         } else {
           setLoader(false);
           toast.error(
